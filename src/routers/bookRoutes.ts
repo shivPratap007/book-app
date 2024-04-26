@@ -8,4 +8,4 @@ router.post("/register",createUser);
 
 router.post('/login',loginUser);
 
-export {router as UserRouter};
+export {router as BookRouter};

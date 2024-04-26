@@ -17,6 +17,7 @@ export const MainApp = (app: Application) => {
     })
 
     app.use("/api/users", UserRouter)
+    
 
     // GLOBAL ERROR
     // IT WILL ALWAYS BE AT THE LAST
