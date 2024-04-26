@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express"
 import createHttpError from "http-errors";
 import { userModel } from "../models/userModel";
+import bcrypt from 'bcrypt'
+import { hashThePassword } from "../utils/passwordHashing";
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -16,6 +18,10 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
             const error=createHttpError(400,'User already exist with this email');
             return next(error);
         }
+
+        const hashedPassword=await hashThePassword(password);
+
+
 
         return res.json({ message: "User is registered" })
     } catch (error) {
