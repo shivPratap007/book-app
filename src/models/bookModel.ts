@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, Types } from "mongoose"
 
-interface BookInterface extends Document {
+export interface BookInterface extends Document {
     title: string
     author: Types.ObjectId
     genre: string
@@ -16,4 +16,4 @@ const bookSchema: Schema<BookInterface> = new Schema({
     file: { type: String, required: true },
 })
 
-const bookModel = mongoose.model<BookInterface>("Book", bookSchema)
+export const bookModel = mongoose.model<BookInterface>("Book", bookSchema)
