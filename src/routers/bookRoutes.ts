@@ -1,11 +1,9 @@
-import express from "express";
-import { createUser, loginUser } from "../controllers/userController";
+import express from "express"
+import { createUser, loginUser } from "../controllers/userController"
+import { createBook } from "../controllers/bookContollers"
 
-const router=express.Router();
+const router = express.Router()
 
+router.post("/", createBook)
 
-router.post("/register",createUser);
-
-router.post('/login',loginUser);
-
-export {router as BookRouter};
+export { router as BookRouter }
