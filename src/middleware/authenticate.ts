@@ -15,6 +15,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         const decodedToken = jwt.verify(token, config.jwt_secret as string)
 
         // CHANGING THE REQUEST
+        // IMPORTANT
         const _req = req as AuthRequest
         _req.userId = decodedToken.sub as string
         next()
