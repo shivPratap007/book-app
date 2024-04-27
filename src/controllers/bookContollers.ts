@@ -13,29 +13,29 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
         const bookData = <BookInterface>req.body
 
         // EXTRACTING THE DETAILS FOR THE COVERIMAGE
-        // const coverImageMimeType = files.coverImage[0].mimetype.split("/").at(-1)
-        // const filename = files.coverImage[0].filename
-        // const filePath = path.resolve(__dirname, "../../public/data/uploads", filename)
-        // // UPLOADING THE COVER IMAGE IN CLOUDINARY
-        // const uploadCoverImageResult = await cloudinary.uploader.upload(filePath, {
-        //     filename_override: filename,
-        //     folder: "bookcover",
-        //     format: coverImageMimeType,
-        // })
+        const coverImageMimeType = files.coverImage[0].mimetype.split("/").at(-1)
+        const filename = files.coverImage[0].filename
+        const filePath = path.resolve(__dirname, "../../public/data/uploads", filename)
+        // UPLOADING THE COVER IMAGE IN CLOUDINARY
+        const uploadCoverImageResult = await cloudinary.uploader.upload(filePath, {
+            filename_override: filename,
+            folder: "bookcover",
+            format: coverImageMimeType,
+        })
 
-        // // EXTRACTING THE DETAILS FOR THE PDF
-        // const bookFileMimeType = files.file[0].mimetype.split("/").at(-1)
-        // const bookFileName = files.file[0].filename
-        // const bookFilePath = path.resolve(__dirname, "../../public/data/uploads", bookFileName)
+        // EXTRACTING THE DETAILS FOR THE PDF
+        const bookFileMimeType = files.file[0].mimetype.split("/").at(-1)
+        const bookFileName = files.file[0].filename
+        const bookFilePath = path.resolve(__dirname, "../../public/data/uploads", bookFileName)
 
-        // // UPLOADING THE PDF IN CLOUDINARY
-        // const uploadPdfResult = await cloudinary.uploader.upload(bookFilePath, {
-        //     // TO UPLOAD PDF WE HAVE TO WRITE THIS
-        //     resource_type: "raw",
-        //     filename_override: bookFileName,
-        //     folder: "book-pdf",
-        //     format: bookFileMimeType,
-        // })
+        // UPLOADING THE PDF IN CLOUDINARY
+        const uploadPdfResult = await cloudinary.uploader.upload(bookFilePath, {
+            // TO UPLOAD PDF WE HAVE TO WRITE THIS
+            resource_type: "raw",
+            filename_override: bookFileName,
+            folder: "book-pdf",
+            format: bookFileMimeType,
+        })
 
         
         // IMPORTANT
@@ -50,8 +50,8 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
         })
 
         // FUNCTIONS TO DELETE THE FILES FROM LOCALLY IN SERVER SERVER
-        // await deleteFiles(filePath, next)
-        // await deleteFiles(bookFilePath, next)
+        await deleteFiles(filePath, next)
+        await deleteFiles(bookFilePath, next)
 
         return res.status(201).json({
             id: newBook._id,
