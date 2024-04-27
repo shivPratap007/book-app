@@ -93,3 +93,37 @@ export const updateBook = async (req: Request, res: Response, next: NextFunction
         next(createHttpError(400, error.message))
     }
 }
+
+export const getAllBooks = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const allBooks = await bookModel.find()
+        if (!allBooks) {
+            return next(createHttpError(500, "No book found"))
+        }
+        return res.json({
+            allBooks,
+        })
+    } catch (error: any) {
+        console.log(error)
+        return next(createHttpError(400, error.message))
+    }
+}
+
+export const getOneBook = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const bookId = req.params.bookID
+        if (!bookId) {
+            return next(createHttpError(500, "No book found"))
+        }
+        const result = await bookModel.findById(bookId)
+        if (!result) {
+            return next(createHttpError(500, "No book found"))
+        }
+        return res.json({
+            result,
+        })
+    } catch (error: any) {
+        console.log(error)
+        return next(createHttpError(400, error.message))
+    }
+}

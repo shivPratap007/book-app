@@ -1,7 +1,7 @@
 import express from "express"
 import multer from "multer"
 import path from "node:path"
-import { createBook, updateBook } from "../controllers/bookContollers"
+import { createBook, getAllBooks, getOneBook, updateBook } from "../controllers/bookContollers"
 import { authenticate } from "../middleware/authenticate"
 
 const router = express.Router()
@@ -30,5 +30,9 @@ router.patch(
     ]),
     updateBook
 )
+
+router.get('/',getAllBooks);
+
+router.get('/:bookID',getOneBook);
 
 export { router as BookRouter }
