@@ -8,6 +8,7 @@ import { deleteFiles } from "../utils/deleteFiles"
 import { AuthRequest } from "../middleware/authenticate"
 import { uploadToCloudinary } from "../utils/uploadToCloudinary"
 import { UploadApiResponse } from "cloudinary"
+import { cloudinaryLinkToDeleteFiles } from "../utils/cloudinaryLinkToDeleteFiles"
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -49,7 +50,6 @@ export const updateBook = async (req: Request, res: Response, next: NextFunction
             return next(createHttpError(400, "Please provide the book id"))
         }
         const bookData: UpdateBook = req.body
-        console.log(bookData)
         if (!bookData) {
             return next(createHttpError(400, "Please provide the details of the book"))
         }
@@ -116,6 +116,55 @@ export const getOneBook = async (req: Request, res: Response, next: NextFunction
             return next(createHttpError(500, "No book found"))
         }
         const result = await bookModel.findById(bookId)
+        if (!result) {
+            return next(createHttpError(500, "No book found"))
+        }
+        return res.json({
+            result,
+        })
+    } catch (error: any) {
+        console.log(error)
+        return next(createHttpError(400, error.message))
+    }
+}
+
+export const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const bookId = req.params.bookID
+        if (!bookId) {
+            return next(createHttpError(500, "No book found"))
+        }
+        // GETTING THE AUTHOR ID FROM BOOK
+        const book = await bookModel.findById(bookId)
+        const author = book?.author
+
+        // GETTING LOGIN USER ID
+        const _req = req as AuthRequest
+        const loginUserId = _req.userId
+
+        // CHECK ID BOTH OF THEM ARE EQUAL OR NOT
+        if (author && author.toString() !== loginUserId) {
+            return next(createHttpError(400, "Not authorized to delete the file"))
+        }
+
+        // const coverFileSplits = book?.coverImage.split("/")
+        // const coverImagePublicId = coverFileSplits?.at(-2) + "/" + coverFileSplits?.at(-1)?.split(".").at(-2);
+
+        // GENERATE THE PUBLIC ID OF THE CLOUDINARY
+        const coverImagePublicId = cloudinaryLinkToDeleteFiles(book?.coverImage, next) || ""
+        const filesPublicId = cloudinaryLinkToDeleteFiles(book?.file, next) || ""
+
+        const coverImageResult = await cloudinary.uploader.destroy(coverImagePublicId)
+        if (!coverImageResult) {
+            return next(createHttpError(500, "Not able to delete the file form cloud"))
+        }
+
+        const fileResult = await cloudinary.uploader.destroy(filesPublicId)
+        if (!fileResult) {
+            return next(createHttpError(500, "Not able to delete the file form cloud"))
+        }
+
+        const result = await bookModel.deleteOne({ _id: bookId })
         if (!result) {
             return next(createHttpError(500, "No book found"))
         }

@@ -10,11 +10,14 @@ export const uploadToCloudinary = async (uploadFile: any, next: NextFunction) =>
         // EXTRACTING THE DETAILS FOR THE UPLOAD
         const coverImageMimeType = uploadFile.mimetype.split("/").at(-1)
         const filename = uploadFile.filename
-        const filePath = path.resolve(__dirname, "../../public/data/uploads", filename)
+        const filePath = path.resolve(__dirname, "../../public/data/uploads", filename);
+
+        let folderName=(coverImageMimeType=="pdf")?"book-pdf":"bookcover";
+        
         // UPLOADING THE DATA IN CLOUDINARY
         const uploadedResults: UploadApiResponse = await cloudinary.uploader.upload(filePath, {
             filename_override: filename,
-            folder: "bookcover",
+            folder: folderName,
             format: coverImageMimeType,
         })
 
