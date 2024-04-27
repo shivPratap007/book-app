@@ -45,8 +45,8 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
             title: bookData.title,
             genre: bookData.genre,
             author: _req.userId,
-            coverImage: "1234",
-            file: "1234",
+            coverImage: uploadCoverImageResult.secure_url,
+            file: uploadPdfResult.secure_url,
         })
 
         // FUNCTIONS TO DELETE THE FILES FROM LOCALLY IN SERVER SERVER
