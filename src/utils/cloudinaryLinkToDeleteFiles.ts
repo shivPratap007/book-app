@@ -6,7 +6,6 @@ export const cloudinaryLinkToDeleteFiles=(book:(string|undefined),next:NextFunct
     try{
         const coverFileSplits = book?.split("/");
         const link=coverFileSplits?.at(-2) + "/" + coverFileSplits?.at(-1)?.split(".").at(-2);
-        console.log(link);
         return link;
     }catch(error:any){
         console.log(error);

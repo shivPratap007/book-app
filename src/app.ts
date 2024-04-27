@@ -18,7 +18,6 @@ export const MainApp = (app: Application) => {
     app.get("/", (req: Request, res: Response, next: NextFunction) => {
         // const error = createHttpError(500, "Something went wrong")
         // throw error
-        console.log(req.body)
     })
 
     app.use("/api/users", UserRouter)

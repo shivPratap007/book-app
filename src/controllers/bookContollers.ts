@@ -9,6 +9,7 @@ import { AuthRequest } from "../middleware/authenticate"
 import { uploadToCloudinary } from "../utils/uploadToCloudinary"
 import { UploadApiResponse } from "cloudinary"
 import { cloudinaryLinkToDeleteFiles } from "../utils/cloudinaryLinkToDeleteFiles"
+import { userModel } from "../models/userModel"
 
 export const createBook = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,6 +22,8 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
 
         // IMPORTANT
         const _req = req as AuthRequest
+
+        
         // SAVING THE DATA INTO THE DATABASE
         const newBook = await bookModel.create({
             title: bookData.title,
@@ -28,6 +31,7 @@ export const createBook = async (req: Request, res: Response, next: NextFunction
             author: _req.userId,
             coverImage: uploadedCoverImageResult?.secure_url,
             file: uploadedPdfResult?.secure_url,
+            description:bookData.description,
         })
 
         return res.status(201).json({
@@ -96,7 +100,8 @@ export const updateBook = async (req: Request, res: Response, next: NextFunction
 
 export const getAllBooks = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const allBooks = await bookModel.find()
+        const allBooks = await bookModel.find({}).populate("author","name");
+        console.log(allBooks);
         if (!allBooks) {
             return next(createHttpError(500, "No book found"))
         }
